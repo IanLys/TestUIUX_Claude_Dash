@@ -1,0 +1,329 @@
+/* ===========================================
+   Smart'Design - Sidebar Navigation Component
+   =========================================== */
+
+/* Sidebar Container */
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 260px;
+  height: 100vh;
+  background: white;
+  border-right: 1px solid var(--color-gray-200);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  overflow: hidden;
+}
+
+/* Sidebar Header */
+.sidebar-header {
+  padding: 20px;
+  border-bottom: 1px solid var(--color-gray-100);
+  flex-shrink: 0;
+}
+
+/* Logo */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.logo-icon {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.logo-icon svg {
+  width: 24px;
+  height: 24px;
+  fill: white;
+}
+
+.logo-text {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-secondary);
+}
+
+.logo-text span {
+  color: var(--color-primary);
+}
+
+/* Sidebar Navigation */
+.sidebar-nav {
+  flex: 1;
+  padding: 16px 12px;
+  overflow-y: auto;
+}
+
+/* Scrollbar Styling */
+.sidebar-nav::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar-nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb {
+  background: var(--color-gray-300);
+  border-radius: 2px;
+}
+
+/* Nav Section */
+.nav-section {
+  margin-bottom: 24px;
+}
+
+.nav-section:last-child {
+  margin-bottom: 0;
+}
+
+.nav-section-title {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-gray-400);
+  padding: 0 12px;
+  margin-bottom: 8px;
+}
+
+/* Nav Item */
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: var(--color-gray-600);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.15s ease;
+  margin-bottom: 2px;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+}
+
+.nav-item:hover {
+  background: var(--color-gray-100);
+  color: var(--color-gray-800);
+}
+
+.nav-item.active {
+  background: var(--color-primary-50);
+  color: var(--color-primary);
+}
+
+.nav-item.active .nav-icon {
+  color: var(--color-primary);
+}
+
+/* Nav Icon */
+.nav-icon {
+  width: 20px;
+  height: 20px;
+  color: var(--color-gray-400);
+  flex-shrink: 0;
+}
+
+.nav-item:hover .nav-icon {
+  color: var(--color-gray-600);
+}
+
+/* Nav Badge */
+.nav-badge {
+  margin-left: auto;
+  background: var(--color-error);
+  color: white;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 10px;
+  min-width: 18px;
+  text-align: center;
+}
+
+.nav-badge--warning {
+  background: var(--color-warning);
+}
+
+.nav-badge--info {
+  background: var(--color-info);
+}
+
+.nav-badge--success {
+  background: var(--color-success);
+}
+
+/* Sidebar Services */
+.sidebar-services {
+  padding: 16px;
+  border-top: 1px solid var(--color-gray-100);
+  flex-shrink: 0;
+}
+
+.services-title {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-gray-400);
+  margin-bottom: 12px;
+}
+
+/* Service Card */
+.service-card {
+  background: var(--color-gray-50);
+  border: 1px solid var(--color-gray-200);
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.service-card:last-child {
+  margin-bottom: 0;
+}
+
+.service-card:hover {
+  border-color: var(--color-primary);
+  background: var(--color-primary-50);
+}
+
+.service-card.active {
+  border-color: var(--color-primary);
+  background: var(--color-primary-50);
+}
+
+.service-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-gray-800);
+  margin-bottom: 2px;
+}
+
+.service-count {
+  font-size: 11px;
+  color: var(--color-gray-500);
+}
+
+.service-card.active .service-count {
+  color: var(--color-primary);
+}
+
+/* Sidebar User */
+.sidebar-user {
+  padding: 16px;
+  border-top: 1px solid var(--color-gray-100);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--color-primary-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
+  font-weight: 600;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.user-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.user-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-gray-800);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-role {
+  font-size: 11px;
+  color: var(--color-gray-500);
+}
+
+/* Sidebar Collapsed State */
+.sidebar.collapsed {
+  width: 72px;
+}
+
+.sidebar.collapsed .logo-text,
+.sidebar.collapsed .nav-section-title,
+.sidebar.collapsed .nav-item span:not(.nav-badge),
+.sidebar.collapsed .services-title,
+.sidebar.collapsed .service-name,
+.sidebar.collapsed .service-count,
+.sidebar.collapsed .user-info {
+  display: none;
+}
+
+.sidebar.collapsed .nav-item {
+  justify-content: center;
+  padding: 12px;
+}
+
+.sidebar.collapsed .nav-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  margin: 0;
+}
+
+.sidebar.collapsed .service-card {
+  text-align: center;
+}
+
+/* Mobile Sidebar */
+@media (max-width: 1024px) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+  
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  
+  .sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 99;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+  }
+  
+  .sidebar-overlay.visible {
+    opacity: 1;
+    visibility: visible;
+  }
+}
