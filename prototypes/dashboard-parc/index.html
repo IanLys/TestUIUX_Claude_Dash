@@ -4,31 +4,360 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Smart'Building - Dashboard Parc Immobilier</title>
-  
-  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  
-  <!-- Design System Tokens -->
   <link rel="stylesheet" href="../../design-system/tokens/colors.css">
   <link rel="stylesheet" href="../../design-system/tokens/typography.css">
   <link rel="stylesheet" href="../../design-system/tokens/spacing.css">
-  
-  <!-- Design System Components -->
   <link rel="stylesheet" href="../../design-system/components/buttons.css">
   <link rel="stylesheet" href="../../design-system/components/kpi-cards.css">
   <link rel="stylesheet" href="../../design-system/components/alerts.css">
-  
-  <!-- Dashboard Layout -->
   <link rel="stylesheet" href="layout.css">
   <link rel="stylesheet" href="dashboard.css">
-  
-  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  
   <style>
-    /* Reset */
     *, *::before, *::after { box-sizing: border-box; }
     body { margin: 0; font-family: var(--font-family-base); background: var(--color-background); color: var(--color-text); }
+    
+    /* Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    .modal {
+      background: white;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 600px;
+      max-height: 80vh;
+      overflow: hidden;
+      transform: translateY(20px);
+      transition: transform 0.3s ease;
+    }
+    .modal-overlay.active .modal {
+      transform: translateY(0);
+    }
+    .modal-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--color-gray-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .modal-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--color-gray-900);
+    }
+    .modal-close {
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: var(--color-gray-100);
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-close:hover {
+      background: var(--color-gray-200);
+    }
+    .modal-body {
+      padding: 24px;
+      overflow-y: auto;
+      max-height: 60vh;
+    }
+    .modal-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--color-gray-200);
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    /* Notification Panel */
+    .notification-panel {
+      position: fixed;
+      top: 0;
+      right: -400px;
+      width: 400px;
+      height: 100vh;
+      background: white;
+      box-shadow: -4px 0 20px rgba(0,0,0,0.1);
+      z-index: 1001;
+      transition: right 0.3s ease;
+    }
+    .notification-panel.active {
+      right: 0;
+    }
+    .notification-panel-header {
+      padding: 20px;
+      border-bottom: 1px solid var(--color-gray-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .notification-panel-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .notification-panel-body {
+      padding: 0;
+      overflow-y: auto;
+      height: calc(100vh - 70px);
+    }
+    .notification-item {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--color-gray-100);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .notification-item:hover {
+      background: var(--color-gray-50);
+    }
+    .notification-item.unread {
+      background: var(--color-primary-50);
+    }
+    .notification-item-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+    .notification-type {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+    .notification-type.critical { background: var(--color-error); }
+    .notification-type.warning { background: var(--color-warning); }
+    .notification-type.info { background: var(--color-info); }
+    .notification-type.success { background: var(--color-success); }
+    .notification-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-gray-800);
+      flex: 1;
+    }
+    .notification-time {
+      font-size: 11px;
+      color: var(--color-gray-400);
+    }
+    .notification-desc {
+      font-size: 13px;
+      color: var(--color-gray-600);
+      margin-left: 16px;
+    }
+
+    /* Search Modal */
+    .search-modal .modal {
+      max-width: 700px;
+    }
+    .search-input-large {
+      width: 100%;
+      padding: 16px 20px;
+      border: 2px solid var(--color-gray-200);
+      border-radius: 12px;
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .search-input-large:focus {
+      border-color: var(--color-primary);
+    }
+    .search-results {
+      margin-top: 16px;
+    }
+    .search-result-group {
+      margin-bottom: 20px;
+    }
+    .search-result-group-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--color-gray-400);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    .search-result-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .search-result-item:hover {
+      background: var(--color-gray-100);
+    }
+    .search-result-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--color-gray-100);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-gray-600);
+    }
+    .search-result-info {
+      flex: 1;
+    }
+    .search-result-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-gray-800);
+    }
+    .search-result-meta {
+      font-size: 12px;
+      color: var(--color-gray-500);
+    }
+
+    /* Settings Modal */
+    .settings-section {
+      margin-bottom: 24px;
+    }
+    .settings-section-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-gray-800);
+      margin-bottom: 12px;
+    }
+    .settings-option {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--color-gray-100);
+    }
+    .settings-option:last-child {
+      border-bottom: none;
+    }
+    .settings-option-info {
+      flex: 1;
+    }
+    .settings-option-label {
+      font-size: 14px;
+      color: var(--color-gray-800);
+    }
+    .settings-option-desc {
+      font-size: 12px;
+      color: var(--color-gray-500);
+    }
+    .toggle {
+      width: 44px;
+      height: 24px;
+      background: var(--color-gray-300);
+      border-radius: 12px;
+      position: relative;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .toggle.active {
+      background: var(--color-primary);
+    }
+    .toggle::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 50%;
+      top: 2px;
+      left: 2px;
+      transition: transform 0.2s;
+    }
+    .toggle.active::after {
+      transform: translateX(20px);
+    }
+
+    /* Toast notifications */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .toast {
+      background: var(--color-gray-900);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      animation: slideIn 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .toast.success { background: var(--color-success); }
+    .toast.error { background: var(--color-error); }
+    .toast.warning { background: var(--color-warning); }
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    /* Table row clickable */
+    .sites-table tbody tr {
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .sites-table tbody tr:hover {
+      background: var(--color-primary-50);
+    }
+
+    /* Service card clickable */
+    .service-card {
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .service-card:hover {
+      border-color: var(--color-primary);
+      transform: translateY(-2px);
+    }
+
+    /* Nav item states */
+    .nav-item {
+      transition: all 0.15s;
+    }
+
+    /* Overlay for panels */
+    .panel-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.3);
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s;
+    }
+    .panel-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
   </style>
 </head>
 <body>
@@ -36,7 +365,7 @@
     <!-- SIDEBAR -->
     <aside class="sidebar">
       <div class="sidebar-header">
-        <a href="#" class="logo">
+        <a href="#" class="logo" onclick="showToast('Smart\'Building v1.0', 'info')">
           <div class="logo-icon">
             <svg viewBox="0 0 24 24"><path d="M12 2L2 7v10l10 5 10-5V7L12 2zm0 2.18l6.9 3.45L12 11.09 5.1 7.63 12 4.18zM4 8.82l7 3.5v7.36l-7-3.5V8.82zm9 10.86v-7.36l7-3.5v7.36l-7 3.5z"/></svg>
           </div>
@@ -47,20 +376,20 @@
       <nav class="sidebar-nav">
         <div class="nav-section">
           <div class="nav-section-title">Navigation</div>
-          <a href="#" class="nav-item active">
+          <a href="#" class="nav-item active" data-nav="dashboard" onclick="switchNav(this, 'dashboard')">
             <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
               <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
             </svg>
             Dashboard
           </a>
-          <a href="#" class="nav-item">
+          <a href="#" class="nav-item" data-nav="patrimoine" onclick="switchNav(this, 'patrimoine')">
             <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
             </svg>
             Patrimoine
           </a>
-          <a href="#" class="nav-item">
+          <a href="#" class="nav-item" data-nav="carte" onclick="switchNav(this, 'carte')">
             <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
             </svg>
@@ -70,13 +399,13 @@
         
         <div class="nav-section">
           <div class="nav-section-title">Analyse</div>
-          <a href="#" class="nav-item">
+          <a href="#" class="nav-item" data-nav="analytique" onclick="switchNav(this, 'analytique')">
             <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
             </svg>
             Analytique
           </a>
-          <a href="#" class="nav-item">
+          <a href="#" class="nav-item" data-nav="rapports" onclick="switchNav(this, 'rapports')">
             <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/>
             </svg>
@@ -86,14 +415,14 @@
         
         <div class="nav-section">
           <div class="nav-section-title">Système</div>
-          <a href="#" class="nav-item">
+          <a href="#" class="nav-item" data-nav="alertes" onclick="switchNav(this, 'alertes')">
             <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/>
             </svg>
             Alertes
             <span class="nav-badge">12</span>
           </a>
-          <a href="#" class="nav-item">
+          <a href="#" class="nav-item" data-nav="parametres" onclick="openSettings()">
             <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
             </svg>
@@ -104,17 +433,17 @@
       
       <div class="sidebar-services">
         <div class="services-title">Services Actifs</div>
-        <div class="service-card active">
+        <div class="service-card active" onclick="selectService('gtb')">
           <div class="service-name">Smart'GTB</div>
           <div class="service-count">3 200 sites connectés</div>
         </div>
-        <div class="service-card">
+        <div class="service-card" onclick="selectService('ecopilot')">
           <div class="service-name">Smart'Ecopilot</div>
           <div class="service-count">2 800 sites actifs</div>
         </div>
       </div>
       
-      <div class="sidebar-user">
+      <div class="sidebar-user" onclick="openUserMenu()">
         <div class="user-avatar">MD</div>
         <div class="user-info">
           <div class="user-name">Marc Dupont</div>
@@ -125,29 +454,28 @@
     
     <!-- MAIN CONTENT -->
     <main class="main">
-      <!-- Header -->
       <header class="header">
         <div class="header-title">
           <h1>Parc Immobilier</h1>
           <p>Vue consolidée de votre patrimoine - CDC Habitat</p>
         </div>
         
-        <div class="search-box">
+        <div class="search-box" onclick="openSearchModal()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
           </svg>
-          <input type="text" placeholder="Rechercher un site, équipement...">
+          <input type="text" placeholder="Rechercher un site, équipement..." readonly>
           <span class="search-shortcut">⌘K</span>
         </div>
         
         <div class="header-actions">
-          <button class="header-btn">
+          <button class="header-btn" onclick="toggleNotifications()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/>
             </svg>
             <span class="notification-dot"></span>
           </button>
-          <button class="header-btn">
+          <button class="header-btn" onclick="exportData()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
             </svg>
@@ -155,11 +483,10 @@
         </div>
       </header>
       
-      <!-- Content -->
       <div class="content">
         <!-- Navigation Tabs -->
         <div class="nav-tabs">
-          <button class="nav-tab active">
+          <button class="nav-tab active" onclick="switchTab(this, 'hierarchique')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/>
               <line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/>
@@ -167,14 +494,14 @@
             </svg>
             Hiérarchique
           </button>
-          <button class="nav-tab">
+          <button class="nav-tab" onclick="switchTab(this, 'sites')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
               <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
             </svg>
             Sites
           </button>
-          <button class="nav-tab">
+          <button class="nav-tab" onclick="switchTab(this, 'carte')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
             </svg>
@@ -184,7 +511,7 @@
         
         <!-- KPI Grid -->
         <div class="kpi-grid kpi-grid--4 mb-6">
-          <div class="kpi-card">
+          <div class="kpi-card" onclick="openKpiDetail('batiments')">
             <div class="kpi-header">
               <div class="kpi-icon kpi-icon--buildings">
                 <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
@@ -198,7 +525,7 @@
             </div>
           </div>
           
-          <div class="kpi-card">
+          <div class="kpi-card" onclick="openKpiDetail('energie')">
             <div class="kpi-header">
               <div class="kpi-icon kpi-icon--energy">
                 <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
@@ -212,7 +539,7 @@
             </div>
           </div>
           
-          <div class="kpi-card">
+          <div class="kpi-card" onclick="openKpiDetail('cout')">
             <div class="kpi-header">
               <div class="kpi-icon kpi-icon--cost">
                 <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
@@ -226,7 +553,7 @@
             </div>
           </div>
           
-          <div class="kpi-card">
+          <div class="kpi-card" onclick="openKpiDetail('conformite')">
             <div class="kpi-header">
               <div class="kpi-icon kpi-icon--compliance">
                 <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -243,7 +570,6 @@
         
         <!-- Main Grid -->
         <div class="main-grid">
-          <!-- Left Column -->
           <div class="main-grid-left">
             <!-- Chart Card -->
             <div class="card">
@@ -266,7 +592,7 @@
             <div class="card">
               <div class="card-header">
                 <h3 class="card-title">Top Sites Consommateurs</h3>
-                <a href="#" class="card-action">Voir tout →</a>
+                <a href="#" class="card-action" onclick="openAllSites(); return false;">Voir tout →</a>
               </div>
               <div class="card-body p-0">
                 <table class="sites-table">
@@ -280,7 +606,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
+                    <tr onclick="goToBuilding('residence-soleil')">
                       <td>
                         <div class="site-name">Résidence Soleil</div>
                         <div class="site-address">15 rue de la Paix, Paris 75002</div>
@@ -290,7 +616,7 @@
                       <td class="trend-up">+12%</td>
                       <td><span class="status-badge status-badge--warning">Alerte</span></td>
                     </tr>
-                    <tr>
+                    <tr onclick="goToBuilding('tour-horizon')">
                       <td>
                         <div class="site-name">Tour Horizon</div>
                         <div class="site-address">8 avenue des Champs, Lyon 69003</div>
@@ -300,7 +626,7 @@
                       <td class="trend-down">-3%</td>
                       <td><span class="status-badge status-badge--normal">Normal</span></td>
                     </tr>
-                    <tr>
+                    <tr onclick="goToBuilding('les-jardins')">
                       <td>
                         <div class="site-name">Les Jardins</div>
                         <div class="site-address">22 bd Maritime, Marseille 13008</div>
@@ -310,7 +636,7 @@
                       <td class="trend-down">-7%</td>
                       <td><span class="status-badge status-badge--normal">Normal</span></td>
                     </tr>
-                    <tr>
+                    <tr onclick="goToBuilding('batiment-central')">
                       <td>
                         <div class="site-name">Bâtiment Central</div>
                         <div class="site-address">5 place Bellecour, Lyon 69002</div>
@@ -326,17 +652,16 @@
             </div>
           </div>
           
-          <!-- Right Column -->
           <div class="main-grid-right">
             <!-- Alerts Card -->
             <div class="card">
               <div class="card-header">
                 <h3 class="card-title">Alertes Actives</h3>
-                <a href="#" class="card-action">Voir tout →</a>
+                <a href="#" class="card-action" onclick="openAllAlerts(); return false;">Voir tout →</a>
               </div>
               <div class="card-body">
                 <div class="alert-list">
-                  <div class="alert-item">
+                  <div class="alert-item" onclick="openAlertDetail('alert-1')">
                     <span class="alert-dot alert-dot--critical"></span>
                     <div class="alert-item-content">
                       <div class="alert-item-title">Surconsommation détectée</div>
@@ -344,7 +669,7 @@
                     </div>
                     <span class="alert-badge alert-badge--critical">Critique</span>
                   </div>
-                  <div class="alert-item">
+                  <div class="alert-item" onclick="openAlertDetail('alert-2')">
                     <span class="alert-dot alert-dot--warning"></span>
                     <div class="alert-item-content">
                       <div class="alert-item-title">Maintenance préventive requise</div>
@@ -352,7 +677,7 @@
                     </div>
                     <span class="alert-badge alert-badge--warning">Moyen</span>
                   </div>
-                  <div class="alert-item">
+                  <div class="alert-item" onclick="openAlertDetail('alert-3')">
                     <span class="alert-dot alert-dot--warning"></span>
                     <div class="alert-item-content">
                       <div class="alert-item-title">Talon de nuit anormal</div>
@@ -360,7 +685,7 @@
                     </div>
                     <span class="alert-badge alert-badge--warning">Moyen</span>
                   </div>
-                  <div class="alert-item">
+                  <div class="alert-item" onclick="openAlertDetail('alert-4')">
                     <span class="alert-dot alert-dot--info"></span>
                     <div class="alert-item-content">
                       <div class="alert-item-title">Rapport mensuel disponible</div>
@@ -372,7 +697,7 @@
             </div>
             
             <!-- Building Pulse -->
-            <div class="card">
+            <div class="card" onclick="openPulseDetail()">
               <div class="card-header">
                 <h3 class="card-title">Santé Globale du Parc</h3>
               </div>
@@ -393,8 +718,8 @@
               <div class="predictive-title">Pic de consommation prévu</div>
               <div class="predictive-desc">Dans 3 jours, augmentation estimée de +15% sur le secteur Île-de-France due à la vague de froid.</div>
               <div class="predictive-actions">
-                <button class="btn btn-primary btn-sm">Voir détails</button>
-                <button class="btn btn-secondary btn-sm">Ignorer</button>
+                <button class="btn btn-primary btn-sm" onclick="openPredictionDetail()">Voir détails</button>
+                <button class="btn btn-secondary btn-sm" onclick="dismissPrediction()">Ignorer</button>
               </div>
             </div>
             
@@ -405,35 +730,35 @@
               </div>
               <div class="card-body">
                 <div class="region-list">
-                  <div class="region-item">
+                  <div class="region-item" onclick="filterByRegion('idf')">
                     <span class="region-name">Île-de-France</span>
                     <div class="region-bar-container">
                       <div class="region-bar" style="width: 45%"></div>
                     </div>
                     <span class="region-value">45%</span>
                   </div>
-                  <div class="region-item">
+                  <div class="region-item" onclick="filterByRegion('aura')">
                     <span class="region-name">Auvergne-RA</span>
                     <div class="region-bar-container">
                       <div class="region-bar" style="width: 22%"></div>
                     </div>
                     <span class="region-value">22%</span>
                   </div>
-                  <div class="region-item">
+                  <div class="region-item" onclick="filterByRegion('paca')">
                     <span class="region-name">PACA</span>
                     <div class="region-bar-container">
                       <div class="region-bar" style="width: 18%"></div>
                     </div>
                     <span class="region-value">18%</span>
                   </div>
-                  <div class="region-item">
+                  <div class="region-item" onclick="filterByRegion('occitanie')">
                     <span class="region-name">Occitanie</span>
                     <div class="region-bar-container">
                       <div class="region-bar" style="width: 10%"></div>
                     </div>
                     <span class="region-value">10%</span>
                   </div>
-                  <div class="region-item">
+                  <div class="region-item" onclick="filterByRegion('autres')">
                     <span class="region-name">Autres</span>
                     <div class="region-bar-container">
                       <div class="region-bar" style="width: 5%"></div>
@@ -448,56 +773,341 @@
       </div>
     </main>
   </div>
+
+  <!-- MODALS -->
   
-  <!-- Chart.js Initialization -->
+  <!-- Search Modal -->
+  <div class="modal-overlay search-modal" id="searchModal">
+    <div class="modal">
+      <div class="modal-header">
+        <span class="modal-title">Recherche</span>
+        <button class="modal-close" onclick="closeSearchModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="text" class="search-input-large" placeholder="Rechercher un site, équipement, alerte..." id="searchInput" oninput="filterSearch(this.value)">
+        <div class="search-results" id="searchResults">
+          <div class="search-result-group">
+            <div class="search-result-group-title">Sites récents</div>
+            <div class="search-result-item" onclick="goToBuilding('residence-soleil'); closeSearchModal();">
+              <div class="search-result-icon">🏢</div>
+              <div class="search-result-info">
+                <div class="search-result-name">Résidence Soleil</div>
+                <div class="search-result-meta">Paris 75002 • 64 logements</div>
+              </div>
+            </div>
+            <div class="search-result-item" onclick="goToBuilding('tour-horizon'); closeSearchModal();">
+              <div class="search-result-icon">🏢</div>
+              <div class="search-result-info">
+                <div class="search-result-name">Tour Horizon</div>
+                <div class="search-result-meta">Lyon 69003 • 120 logements</div>
+              </div>
+            </div>
+          </div>
+          <div class="search-result-group">
+            <div class="search-result-group-title">Équipements</div>
+            <div class="search-result-item" onclick="showToast('Navigation vers CTA-01', 'info'); closeSearchModal();">
+              <div class="search-result-icon">⚙️</div>
+              <div class="search-result-info">
+                <div class="search-result-name">CTA-01</div>
+                <div class="search-result-meta">Résidence Soleil • En panne</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div class="modal-overlay" id="settingsModal">
+    <div class="modal">
+      <div class="modal-header">
+        <span class="modal-title">Paramètres</span>
+        <button class="modal-close" onclick="closeSettings()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="settings-section">
+          <div class="settings-section-title">Notifications</div>
+          <div class="settings-option">
+            <div class="settings-option-info">
+              <div class="settings-option-label">Alertes critiques</div>
+              <div class="settings-option-desc">Recevoir les alertes de niveau critique</div>
+            </div>
+            <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+          </div>
+          <div class="settings-option">
+            <div class="settings-option-info">
+              <div class="settings-option-label">Rapports hebdomadaires</div>
+              <div class="settings-option-desc">Recevoir un résumé chaque semaine</div>
+            </div>
+            <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+          </div>
+          <div class="settings-option">
+            <div class="settings-option-info">
+              <div class="settings-option-label">Prédictions IA</div>
+              <div class="settings-option-desc">Notifications des analyses prédictives</div>
+            </div>
+            <div class="toggle" onclick="this.classList.toggle('active')"></div>
+          </div>
+        </div>
+        <div class="settings-section">
+          <div class="settings-section-title">Affichage</div>
+          <div class="settings-option">
+            <div class="settings-option-info">
+              <div class="settings-option-label">Mode sombre</div>
+              <div class="settings-option-desc">Thème sombre pour l'interface</div>
+            </div>
+            <div class="toggle" onclick="this.classList.toggle('active'); showToast('Mode sombre bientôt disponible', 'info')"></div>
+          </div>
+          <div class="settings-option">
+            <div class="settings-option-info">
+              <div class="settings-option-label">Données en temps réel</div>
+              <div class="settings-option-desc">Actualisation automatique des données</div>
+            </div>
+            <div class="toggle active" onclick="this.classList.toggle('active')"></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeSettings()">Annuler</button>
+        <button class="btn btn-primary" onclick="saveSettings()">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- KPI Detail Modal -->
+  <div class="modal-overlay" id="kpiModal">
+    <div class="modal">
+      <div class="modal-header">
+        <span class="modal-title" id="kpiModalTitle">Détail KPI</span>
+        <button class="modal-close" onclick="closeKpiModal()">✕</button>
+      </div>
+      <div class="modal-body" id="kpiModalBody">
+        <!-- Content dynamique -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeKpiModal()">Fermer</button>
+        <button class="btn btn-primary" onclick="exportKpi()">Exporter</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Panel -->
+  <div class="panel-overlay" id="panelOverlay" onclick="closeNotifications()"></div>
+  <div class="notification-panel" id="notificationPanel">
+    <div class="notification-panel-header">
+      <span class="notification-panel-title">Notifications</span>
+      <button class="modal-close" onclick="closeNotifications()">✕</button>
+    </div>
+    <div class="notification-panel-body">
+      <div class="notification-item unread" onclick="handleNotification(this)">
+        <div class="notification-item-header">
+          <span class="notification-type critical"></span>
+          <span class="notification-title">Surconsommation critique</span>
+          <span class="notification-time">Il y a 2h</span>
+        </div>
+        <div class="notification-desc">Résidence Soleil dépasse le seuil de 20%</div>
+      </div>
+      <div class="notification-item unread" onclick="handleNotification(this)">
+        <div class="notification-item-header">
+          <span class="notification-type warning"></span>
+          <span class="notification-title">Maintenance requise</span>
+          <span class="notification-time">Il y a 5h</span>
+        </div>
+        <div class="notification-desc">CTA-01 Tour Horizon nécessite une intervention</div>
+      </div>
+      <div class="notification-item" onclick="handleNotification(this)">
+        <div class="notification-item-header">
+          <span class="notification-type info"></span>
+          <span class="notification-title">Rapport généré</span>
+          <span class="notification-time">Il y a 1j</span>
+        </div>
+        <div class="notification-desc">Le rapport mensuel de décembre est disponible</div>
+      </div>
+      <div class="notification-item" onclick="handleNotification(this)">
+        <div class="notification-item-header">
+          <span class="notification-type success"></span>
+          <span class="notification-title">Objectif atteint</span>
+          <span class="notification-time">Il y a 2j</span>
+        </div>
+        <div class="notification-desc">Réduction de 5% atteinte sur le parc PACA</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
   <script>
+    // Chart initialization
     const ctx = document.getElementById('consumptionChart').getContext('2d');
     new Chart(ctx, {
       type: 'line',
       data: {
         labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'],
         datasets: [
-          {
-            label: 'Électricité',
-            data: [12.5, 11.8, 10.2, 9.5, 8.8, 9.2, 10.5, 10.8, 9.8, 10.5, 11.2, 12.8],
-            borderColor: '#059669',
-            backgroundColor: 'rgba(5, 150, 105, 0.1)',
-            fill: true,
-            tension: 0.4
-          },
-          {
-            label: 'Gaz',
-            data: [8.2, 7.5, 5.8, 3.2, 1.5, 0.8, 0.5, 0.6, 1.2, 3.5, 6.2, 7.8],
-            borderColor: '#F59E0B',
-            backgroundColor: 'rgba(245, 158, 11, 0.1)',
-            fill: true,
-            tension: 0.4
-          },
-          {
-            label: 'Eau',
-            data: [2.1, 2.0, 2.2, 2.4, 2.8, 3.2, 3.5, 3.4, 2.9, 2.5, 2.2, 2.1],
-            borderColor: '#3B82F6',
-            backgroundColor: 'rgba(59, 130, 246, 0.1)',
-            fill: true,
-            tension: 0.4
-          }
+          { label: 'Électricité', data: [12.5, 11.8, 10.2, 9.5, 8.8, 9.2, 10.5, 10.8, 9.8, 10.5, 11.2, 12.8], borderColor: '#059669', backgroundColor: 'rgba(5, 150, 105, 0.1)', fill: true, tension: 0.4 },
+          { label: 'Gaz', data: [8.2, 7.5, 5.8, 3.2, 1.5, 0.8, 0.5, 0.6, 1.2, 3.5, 6.2, 7.8], borderColor: '#F59E0B', backgroundColor: 'rgba(245, 158, 11, 0.1)', fill: true, tension: 0.4 },
+          { label: 'Eau', data: [2.1, 2.0, 2.2, 2.4, 2.8, 3.2, 3.5, 3.4, 2.9, 2.5, 2.2, 2.1], borderColor: '#3B82F6', backgroundColor: 'rgba(59, 130, 246, 0.1)', fill: true, tension: 0.4 }
         ]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false }
-        },
+        plugins: { legend: { display: false } },
         scales: {
-          y: {
-            beginAtZero: true,
-            grid: { color: 'rgba(0,0,0,0.05)' }
-          },
-          x: {
-            grid: { display: false }
-          }
+          y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } },
+          x: { grid: { display: false } }
         }
+      }
+    });
+
+    // Toast notification
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.innerHTML = message;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    // Navigation functions
+    function switchNav(element, section) {
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+      element.classList.add('active');
+      showToast(`Navigation vers ${section}`, 'info');
+    }
+
+    function switchTab(element, tab) {
+      document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
+      element.classList.add('active');
+      showToast(`Vue ${tab} activée`, 'info');
+    }
+
+    // Building navigation
+    function goToBuilding(buildingId) {
+      showToast(`Ouverture du bâtiment...`, 'info');
+      setTimeout(() => {
+        window.location.href = '../dashboard-immeuble/index.html';
+      }, 500);
+    }
+
+    // Service selection
+    function selectService(service) {
+      document.querySelectorAll('.service-card').forEach(el => el.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      showToast(`Service ${service === 'gtb' ? "Smart'GTB" : "Smart'Ecopilot"} sélectionné`, 'success');
+    }
+
+    // Search Modal
+    function openSearchModal() {
+      document.getElementById('searchModal').classList.add('active');
+      document.getElementById('searchInput').focus();
+    }
+    function closeSearchModal() {
+      document.getElementById('searchModal').classList.remove('active');
+    }
+    function filterSearch(value) {
+      // Simulation de recherche
+      console.log('Recherche:', value);
+    }
+
+    // Settings Modal
+    function openSettings() {
+      document.getElementById('settingsModal').classList.add('active');
+    }
+    function closeSettings() {
+      document.getElementById('settingsModal').classList.remove('active');
+    }
+    function saveSettings() {
+      showToast('Paramètres enregistrés', 'success');
+      closeSettings();
+    }
+
+    // KPI Modal
+    function openKpiDetail(kpi) {
+      const modal = document.getElementById('kpiModal');
+      const title = document.getElementById('kpiModalTitle');
+      const body = document.getElementById('kpiModalBody');
+      
+      const kpiData = {
+        batiments: { title: 'Détail Bâtiments', content: '<p>4 847 bâtiments dans le parc</p><ul><li>2 180 en Île-de-France</li><li>1 066 en Auvergne-RA</li><li>872 en PACA</li><li>729 autres régions</li></ul>' },
+        energie: { title: 'Consommation Énergétique', content: '<p>127 GWh consommés sur l\'année</p><ul><li>Électricité: 78 GWh (61%)</li><li>Gaz: 42 GWh (33%)</li><li>Eau: 7 GWh équivalent (6%)</li></ul>' },
+        cout: { title: 'Coûts Énergétiques', content: '<p>12.4 M€ de dépenses annuelles</p><ul><li>Électricité: 8.2 M€</li><li>Gaz: 3.5 M€</li><li>Eau: 0.7 M€</li></ul>' },
+        conformite: { title: 'Conformité Décret Tertiaire', content: '<p>89% de conformité globale</p><ul><li>Objectif 2030: -40%</li><li>Réduction actuelle: -36%</li><li>Sites conformes: 4 312 / 4 847</li></ul>' }
+      };
+      
+      title.textContent = kpiData[kpi].title;
+      body.innerHTML = kpiData[kpi].content;
+      modal.classList.add('active');
+    }
+    function closeKpiModal() {
+      document.getElementById('kpiModal').classList.remove('active');
+    }
+    function exportKpi() {
+      showToast('Export en cours...', 'info');
+      setTimeout(() => showToast('Export terminé', 'success'), 1500);
+    }
+
+    // Notifications Panel
+    function toggleNotifications() {
+      document.getElementById('notificationPanel').classList.toggle('active');
+      document.getElementById('panelOverlay').classList.toggle('active');
+    }
+    function closeNotifications() {
+      document.getElementById('notificationPanel').classList.remove('active');
+      document.getElementById('panelOverlay').classList.remove('active');
+    }
+    function handleNotification(element) {
+      element.classList.remove('unread');
+      showToast('Notification marquée comme lue', 'info');
+    }
+
+    // Alert functions
+    function openAlertDetail(alertId) {
+      showToast('Ouverture du détail de l\'alerte...', 'info');
+    }
+    function openAllAlerts() {
+      showToast('Affichage de toutes les alertes', 'info');
+    }
+
+    // Other functions
+    function openAllSites() {
+      showToast('Affichage de tous les sites', 'info');
+    }
+    function openPulseDetail() {
+      showToast('Score de santé: 87/100 - État Bon', 'success');
+    }
+    function openPredictionDetail() {
+      showToast('Analyse prédictive IA en cours...', 'info');
+    }
+    function dismissPrediction() {
+      event.currentTarget.closest('.predictive-card').style.display = 'none';
+      showToast('Prédiction ignorée', 'info');
+    }
+    function filterByRegion(region) {
+      showToast(`Filtrage par région: ${region.toUpperCase()}`, 'info');
+    }
+    function exportData() {
+      showToast('Export des données en cours...', 'info');
+      setTimeout(() => showToast('Fichier Excel généré', 'success'), 2000);
+    }
+    function openUserMenu() {
+      showToast('Menu utilisateur - Déconnexion disponible', 'info');
+    }
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        openSearchModal();
+      }
+      if (e.key === 'Escape') {
+        closeSearchModal();
+        closeSettings();
+        closeKpiModal();
+        closeNotifications();
       }
     });
   </script>
