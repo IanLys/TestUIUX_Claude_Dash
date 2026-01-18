@@ -9,15 +9,16 @@
 | Info | Valeur |
 |------|--------|
 | **Date** | 2026-01-18 |
-| **Dernière action** | Création fichier CLAUDE_STATE.md |
-| **Statut global** | Design System + Dashboard Parc ✅ → Dashboard Immeuble en cours |
+| **Dernière action** | Création Dashboard Immeuble complet |
+| **Statut global** | ✅ Dashboard Parc + Dashboard Immeuble terminés |
 
 ---
 
 ## 🎯 Prochaine Action Immédiate
 
-→ **Créer le Dashboard Immeuble** (`prototypes/dashboard-immeuble/`)
-→ **Puis** : Ajouter composants manquants (sidebar, tables, charts, modals)
+→ **Ajouter composants manquants au Design System** (sidebar, tables, charts, modals)
+→ **Créer la documentation interactive** (`design-system/index.html`)
+→ **Ajouter interactivité** (graphiques dynamiques avec Chart.js)
 
 ---
 
@@ -42,9 +43,9 @@
 - [x] `prototypes/dashboard-parc/index.html` (22 KB)
 - [x] `prototypes/dashboard-parc/layout.css` (7.4 KB)
 - [x] `prototypes/dashboard-parc/dashboard.css` (7.4 KB)
-- [ ] `prototypes/dashboard-immeuble/index.html`
-- [ ] `prototypes/dashboard-immeuble/layout.css`
-- [ ] `prototypes/dashboard-immeuble/building.css`
+- [x] `prototypes/dashboard-immeuble/index.html` (29 KB) ✨ NEW
+- [x] `prototypes/dashboard-immeuble/layout.css` (7.2 KB) ✨ NEW
+- [x] `prototypes/dashboard-immeuble/building.css` (8.5 KB) ✨ NEW
 
 ### Documentation
 - [ ] `design-system/index.html` (documentation interactive)
@@ -55,14 +56,27 @@
 
 ## 📝 Notes de Session
 
-### 2026-01-18
-- Reprise après plantage conversation précédente
-- Vérification état repo GitHub : structure OK
-- Objectifs session : Dashboard Immeuble + Composants manquants
+### 2026-01-18 (Session 2)
+- ✅ Reprise après plantage conversation précédente
+- ✅ Vérification état repo GitHub : tous fichiers intacts
+- ✅ **Dashboard Immeuble créé** avec :
+  - Navigation retour vers Parc
+  - Infos bâtiment + Widget Building Pulse
+  - 5 KPIs spécifiques (Énergie, Coût, Confort, Maintenance, CO2)
+  - Tabs de navigation (Vue d'ensemble, Énergie, Maintenance, Confort, Sécurité)
+  - Arborescence structure bâtiment (Zones → Étages → Lots)
+  - Liste des alertes actives
+  - Grille des équipements principaux avec statuts
+
+### 2026-01-18 (Session 1)
+- Création structure initiale
+- Design System tokens (colors, typography, spacing)
+- Design System composants (buttons, kpi-cards, alerts)
+- Dashboard Parc complet
 
 ---
 
-## 🏗️ Architecture Cible
+## 🏗️ Architecture Actuelle
 
 ```
 IanLys/TestUIUX_Claude_Dash/
@@ -70,7 +84,7 @@ IanLys/TestUIUX_Claude_Dash/
 ├── CLAUDE_STATE.md                    ← CE FICHIER
 ├── design-system/
 │   ├── README.md
-│   ├── index.html                     ← Documentation interactive
+│   ├── index.html                     🔄 À créer (documentation)
 │   ├── tokens/
 │   │   ├── colors.css                 ✅
 │   │   ├── typography.css             ✅
@@ -90,19 +104,56 @@ IanLys/TestUIUX_Claude_Dash/
     │   ├── layout.css                 ✅
     │   └── dashboard.css              ✅
     └── dashboard-immeuble/
-        ├── index.html                 🔄 À créer
-        ├── layout.css                 🔄 À créer
-        └── building.css               🔄 À créer
+        ├── index.html                 ✅ NEW
+        ├── layout.css                 ✅ NEW
+        └── building.css               ✅ NEW
 ```
+
+---
+
+## 🎨 Fonctionnalités Implémentées
+
+### Dashboard Parc
+- [x] Sidebar avec navigation et services
+- [x] Header avec recherche et notifications
+- [x] 4 KPIs globaux (Bâtiments, Énergie, Coûts, Conformité)
+- [x] Graphique consommation (placeholder)
+- [x] Carte France (placeholder)
+- [x] Liste alertes actives
+- [x] Tableau top sites consommateurs
+- [x] Widget Building Pulse
+- [x] Carte prédictive IA
+
+### Dashboard Immeuble
+- [x] Navigation retour vers Parc
+- [x] Header contextuel (nom bâtiment, adresse, statut)
+- [x] Infos bâtiment (surface, étages, lots, équipements, DPE)
+- [x] Widget Building Pulse avec score santé
+- [x] 5 Tabs de navigation
+- [x] 5 KPIs spécifiques
+- [x] Arborescence structure bâtiment interactive
+- [x] Liste alertes avec sévérités
+- [x] Grille équipements avec statuts et métriques
 
 ---
 
 ## 🔗 Liens Utiles
 
 - **Repo GitHub**: https://github.com/IanLys/TestUIUX_Claude_Dash
-- **Dashboard Parc Preview**: Ouvrir `prototypes/dashboard-parc/index.html`
-- **Specs fonctionnelles**: Voir documents projet Claude
+- **Dashboard Parc**: `prototypes/dashboard-parc/index.html`
+- **Dashboard Immeuble**: `prototypes/dashboard-immeuble/index.html`
 
 ---
 
-*Dernière mise à jour: 2026-01-18 par Claude*
+## 📋 Prochaines Étapes Suggérées
+
+1. **Composants Design System** : sidebar, tables, charts, modals
+2. **Documentation interactive** : page HTML showcasing tous les composants
+3. **Graphiques dynamiques** : intégrer Chart.js pour courbes de charge
+4. **Vue Énergie détaillée** : onglet énergie du dashboard immeuble
+5. **Vue Maintenance** : liste OT, fiche équipement détaillée
+6. **Responsive mobile** : optimisation tablette/mobile
+
+---
+
+*Dernière mise à jour: 2026-01-18 18:28 UTC par Claude*
