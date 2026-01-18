@@ -3,122 +3,87 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Smart'Building - Résidence Soleil</title>
-  
-  <!-- Google Fonts -->
+  <title>Smart'Building - Bâtiment Alpha | Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  
-  <!-- Design System Tokens -->
   <link rel="stylesheet" href="../../design-system/tokens/colors.css">
   <link rel="stylesheet" href="../../design-system/tokens/typography.css">
   <link rel="stylesheet" href="../../design-system/tokens/spacing.css">
-  
-  <!-- Design System Components -->
-  <link rel="stylesheet" href="../../design-system/components/buttons.css">
-  <link rel="stylesheet" href="../../design-system/components/kpi-cards.css">
-  <link rel="stylesheet" href="../../design-system/components/alerts.css">
-  
-  <!-- Dashboard Styles -->
-  <link rel="stylesheet" href="../dashboard-parc/layout.css">
+  <link rel="stylesheet" href="layout.css">
   <link rel="stylesheet" href="building.css">
-  
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  
-  <style>
-    *, *::before, *::after { box-sizing: border-box; }
-    body { margin: 0; font-family: var(--font-family-base); background: var(--color-background); color: var(--color-text); }
-  </style>
 </head>
 <body>
-  <div class="app">
-    <!-- SIDEBAR (même structure que Dashboard Parc) -->
+  <div class="app-container">
+    <!-- Sidebar -->
     <aside class="sidebar">
       <div class="sidebar-header">
-        <a href="../dashboard-parc/index.html" class="logo">
+        <div class="logo">
           <div class="logo-icon">
             <svg viewBox="0 0 24 24"><path d="M12 2L2 7v10l10 5 10-5V7L12 2zm0 2.18l6.9 3.45L12 11.09 5.1 7.63 12 4.18zM4 8.82l7 3.5v7.36l-7-3.5V8.82zm9 10.86v-7.36l7-3.5v7.36l-7 3.5z"/></svg>
           </div>
           <div class="logo-text">Smart'<span>Building</span></div>
-        </a>
+        </div>
       </div>
       
       <nav class="sidebar-nav">
         <div class="nav-section">
           <div class="nav-section-title">Navigation</div>
           <a href="../dashboard-parc/index.html" class="nav-item">
-            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
-              <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
-            </svg>
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
             Dashboard Parc
           </a>
-          <a href="#" class="nav-item active">
-            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
-            </svg>
+          <div class="nav-item active">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
             Bâtiment
-          </a>
+          </div>
+          <div class="nav-item">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Carte
+          </div>
         </div>
-        
+
         <div class="nav-section">
-          <div class="nav-section-title">Modules</div>
-          <a href="#zones" class="nav-item">
-            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/>
-            </svg>
-            Zones & Étages
-          </a>
-          <a href="#equipements" class="nav-item">
-            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09a1.65 1.65 0 001.51-1 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>
-            </svg>
-            Équipements
-          </a>
-          <a href="#energie" class="nav-item">
-            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-            </svg>
+          <div class="nav-section-title">Exploitation</div>
+          <div class="nav-item">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
             Énergie
-          </a>
-          <a href="#confort" class="nav-item">
-            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z"/>
-            </svg>
-            Confort
-          </a>
+          </div>
+          <div class="nav-item">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+            Maintenance
+            <span class="nav-badge">3</span>
+          </div>
+          <div class="nav-item">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Sécurité
+          </div>
         </div>
-        
+
         <div class="nav-section">
           <div class="nav-section-title">Système</div>
-          <a href="#alertes" class="nav-item">
-            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/>
-            </svg>
+          <div class="nav-item">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
             Alertes
-            <span class="nav-badge">3</span>
-          </a>
-          <a href="#maintenance" class="nav-item">
-            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/>
-            </svg>
-            Maintenance
-          </a>
+            <span class="nav-badge">7</span>
+          </div>
+          <div class="nav-item">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+            Paramètres
+          </div>
         </div>
       </nav>
-      
+
       <div class="sidebar-services">
         <div class="services-title">Services Actifs</div>
         <div class="service-card active">
           <div class="service-name">Smart'GTB</div>
-          <div class="service-count">Hypervision active</div>
+          <div class="service-count">Hypervision technique</div>
         </div>
-        <div class="service-card active">
+        <div class="service-card">
           <div class="service-name">Smart'Ecopilot</div>
-          <div class="service-count">Monitoring actif</div>
+          <div class="service-count">Management énergétique</div>
         </div>
       </div>
-      
+
       <div class="sidebar-user">
         <div class="user-avatar">MD</div>
         <div class="user-info">
@@ -127,424 +92,500 @@
         </div>
       </div>
     </aside>
-    
-    <!-- MAIN CONTENT -->
+
+    <!-- Main Content -->
     <main class="main">
-      <!-- Header avec Breadcrumb -->
+      <!-- Header -->
       <header class="header">
+        <a href="../dashboard-parc/index.html" class="header-back">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          Retour au Parc
+        </a>
         <div class="header-title">
-          <nav class="breadcrumb">
-            <a href="../dashboard-parc/index.html">Parc Immobilier</a>
-            <span class="breadcrumb-separator">›</span>
-            <a href="#">Île-de-France</a>
-            <span class="breadcrumb-separator">›</span>
-            <span class="breadcrumb-current">Résidence Soleil</span>
-          </nav>
-          <h1>Résidence Soleil</h1>
-          <p>15 rue de la Paix, Paris 75002 • 45 logements • 3 200 m²</p>
+          <h1>
+            Résidence Soleil - Bâtiment Alpha
+            <span class="building-status ok">
+              <span class="building-status-dot"></span>
+              Opérationnel
+            </span>
+          </h1>
+          <p>45 rue de la République, 75011 Paris • Dernière MAJ: il y a 2 min</p>
         </div>
-        
+        <div class="search-box">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          <input type="text" placeholder="Rechercher zone, équipement...">
+          <span class="search-shortcut">⌘K</span>
+        </div>
         <div class="header-actions">
-          <button class="btn btn-secondary">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
-            </svg>
-            Exporter
+          <button class="header-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+            <span class="notification-dot"></span>
           </button>
-          <button class="btn btn-primary">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09a1.65 1.65 0 00-1-1.51"/>
-            </svg>
-            Configurer
+          <button class="header-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
           </button>
         </div>
       </header>
-      
+
       <!-- Content -->
       <div class="content">
-        <!-- Services Tabs -->
-        <div class="service-tabs">
-          <button class="service-tab active" data-service="gtb">
-            <span class="service-tab-icon">🏢</span>
-            Smart'GTB
+        <!-- Building Info + Pulse -->
+        <div class="building-info">
+          <div class="building-details">
+            <div class="building-detail">
+              <span class="building-detail-label">Surface</span>
+              <span class="building-detail-value">12 450 m²</span>
+            </div>
+            <div class="building-detail">
+              <span class="building-detail-label">Étages</span>
+              <span class="building-detail-value">8 niveaux</span>
+            </div>
+            <div class="building-detail">
+              <span class="building-detail-label">Lots</span>
+              <span class="building-detail-value">64 logements</span>
+            </div>
+            <div class="building-detail">
+              <span class="building-detail-label">Équipements IoT</span>
+              <span class="building-detail-value">127 actifs</span>
+            </div>
+            <div class="building-detail">
+              <span class="building-detail-label">DPE</span>
+              <span class="building-detail-value">Classe C</span>
+            </div>
+          </div>
+          <div class="building-pulse-container">
+            <div class="building-pulse">
+              <span class="building-pulse-score">87</span>
+              <span class="building-pulse-label">Score Santé</span>
+            </div>
+            <div class="building-pulse-info">
+              <div class="building-pulse-status">● Excellent</div>
+              <div class="building-pulse-update">Mis à jour il y a 2 min</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabs Navigation -->
+        <div class="tabs">
+          <button class="tab active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+            Vue d'ensemble
           </button>
-          <button class="service-tab" data-service="ecopilot">
-            <span class="service-tab-icon">⚡</span>
-            Smart'Ecopilot
+          <button class="tab">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            Énergie
+          </button>
+          <button class="tab">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+            Maintenance
+            <span class="tab-badge">3</span>
+          </button>
+          <button class="tab">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 6v6l4 2"/></svg>
+            Confort
+          </button>
+          <button class="tab">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Sécurité
           </button>
         </div>
-        
+
         <!-- KPI Grid -->
-        <div class="kpi-grid kpi-grid--4 mb-6">
+        <div class="kpi-grid">
           <div class="kpi-card">
             <div class="kpi-header">
-              <div class="kpi-icon kpi-icon--energy">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              <div class="kpi-icon energy">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
               </div>
-              <span class="kpi-label">Consommation Mois</span>
+              <span class="kpi-label">Conso. Électrique</span>
             </div>
-            <div class="kpi-value">245<span class="kpi-unit">MWh</span></div>
+            <div class="kpi-value">24.5 MWh</div>
             <div class="kpi-trend">
-              <span class="kpi-trend-badge kpi-trend-badge--negative">↗ +12%</span>
+              <span class="kpi-trend-badge negative">↗ +3.2%</span>
               <span class="kpi-trend-period">vs mois dernier</span>
             </div>
           </div>
-          
+
           <div class="kpi-card">
             <div class="kpi-header">
-              <div class="kpi-icon kpi-icon--cost">
-                <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
+              <div class="kpi-icon cost">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
               </div>
-              <span class="kpi-label">Coût Mois</span>
+              <span class="kpi-label">Coût Énergétique</span>
             </div>
-            <div class="kpi-value">18.5<span class="kpi-unit">k€</span></div>
+            <div class="kpi-value">€4 230</div>
             <div class="kpi-trend">
-              <span class="kpi-trend-badge kpi-trend-badge--negative">↗ +8%</span>
-              <span class="kpi-trend-period">vs budget</span>
+              <span class="kpi-trend-badge positive">↘ -5.1%</span>
+              <span class="kpi-trend-period">vs mois dernier</span>
             </div>
           </div>
-          
+
           <div class="kpi-card">
             <div class="kpi-header">
-              <div class="kpi-icon kpi-icon--buildings">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z"/></svg>
+              <div class="kpi-icon comfort">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z"/></svg>
               </div>
               <span class="kpi-label">Confort Moyen</span>
             </div>
-            <div class="kpi-value">21.5<span class="kpi-unit">°C</span></div>
+            <div class="kpi-value">21.4°C</div>
             <div class="kpi-trend">
-              <span class="kpi-trend-badge kpi-trend-badge--positive">✓ Optimal</span>
+              <span class="kpi-trend-badge positive">✓ Optimal</span>
+              <span class="kpi-trend-period">CO2: 520 ppm</span>
             </div>
           </div>
-          
+
           <div class="kpi-card">
             <div class="kpi-header">
-              <div class="kpi-icon kpi-icon--compliance">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <div class="kpi-icon maintenance">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
               </div>
-              <span class="kpi-label">Équipements OK</span>
+              <span class="kpi-label">OT Ouverts</span>
             </div>
-            <div class="kpi-value">94<span class="kpi-unit">%</span></div>
+            <div class="kpi-value">3</div>
             <div class="kpi-trend">
-              <span class="kpi-trend-badge kpi-trend-badge--warning">2 en alerte</span>
+              <span class="kpi-trend-badge negative">1 critique</span>
+              <span class="kpi-trend-period">2 en attente</span>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <div class="kpi-icon carbon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 6v6l4 2"/></svg>
+              </div>
+              <span class="kpi-label">Émissions CO2</span>
+            </div>
+            <div class="kpi-value">4.8 tCO2</div>
+            <div class="kpi-trend">
+              <span class="kpi-trend-badge positive">↘ -8.3%</span>
+              <span class="kpi-trend-period">vs N-1</span>
             </div>
           </div>
         </div>
-        
-        <!-- Main Grid: Structure Bâtiment + Infos -->
-        <div class="building-grid">
-          <!-- Left: Arborescence Bâtiment -->
-          <div class="building-structure">
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">Structure du Bâtiment</h3>
-                <div class="structure-view-toggle">
-                  <button class="toggle-btn active" data-view="tree">
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-                      <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>
-                      <line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
-                    </svg>
-                  </button>
-                  <button class="toggle-btn" data-view="plan">
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-                      <rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/>
-                    </svg>
-                  </button>
-                </div>
-              </div>
-              <div class="card-body">
-                <div class="tree-view">
-                  <!-- Bâtiment Root -->
-                  <div class="tree-node tree-node--root expanded">
-                    <div class="tree-node-header">
-                      <span class="tree-expand">▼</span>
-                      <span class="tree-icon">🏢</span>
-                      <span class="tree-label">Résidence Soleil</span>
-                      <span class="tree-badge tree-badge--warning">3</span>
-                    </div>
-                    
-                    <!-- Parties Communes -->
-                    <div class="tree-children">
-                      <div class="tree-node expanded">
-                        <div class="tree-node-header">
-                          <span class="tree-expand">▼</span>
-                          <span class="tree-icon">🔧</span>
-                          <span class="tree-label">Parties Communes</span>
-                          <span class="tree-badge tree-badge--critical">1</span>
-                        </div>
-                        <div class="tree-children">
-                          <div class="tree-node tree-node--leaf">
-                            <div class="tree-node-header">
-                              <span class="tree-icon">⚡</span>
-                              <span class="tree-label">Local Technique</span>
-                              <span class="tree-status tree-status--ok"></span>
-                            </div>
-                          </div>
-                          <div class="tree-node tree-node--leaf">
-                            <div class="tree-node-header">
-                              <span class="tree-icon">❄️</span>
-                              <span class="tree-label">Chaufferie</span>
-                              <span class="tree-status tree-status--critical"></span>
-                            </div>
-                          </div>
-                          <div class="tree-node tree-node--leaf">
-                            <div class="tree-node-header">
-                              <span class="tree-icon">🚪</span>
-                              <span class="tree-label">Hall d'entrée</span>
-                              <span class="tree-status tree-status--ok"></span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <!-- Étage 1 -->
-                      <div class="tree-node">
-                        <div class="tree-node-header">
-                          <span class="tree-expand">▶</span>
-                          <span class="tree-icon">🏠</span>
-                          <span class="tree-label">Étage 1</span>
-                          <span class="tree-count">8 lots</span>
-                        </div>
-                      </div>
-                      
-                      <!-- Étage 2 -->
-                      <div class="tree-node expanded">
-                        <div class="tree-node-header">
-                          <span class="tree-expand">▼</span>
-                          <span class="tree-icon">🏠</span>
-                          <span class="tree-label">Étage 2</span>
-                          <span class="tree-badge tree-badge--warning">2</span>
-                        </div>
-                        <div class="tree-children">
-                          <div class="tree-node tree-node--leaf">
-                            <div class="tree-node-header">
-                              <span class="tree-icon">🚪</span>
-                              <span class="tree-label">Apt 201</span>
-                              <span class="tree-status tree-status--warning"></span>
-                            </div>
-                          </div>
-                          <div class="tree-node tree-node--leaf">
-                            <div class="tree-node-header">
-                              <span class="tree-icon">🚪</span>
-                              <span class="tree-label">Apt 202</span>
-                              <span class="tree-status tree-status--ok"></span>
-                            </div>
-                          </div>
-                          <div class="tree-node tree-node--leaf">
-                            <div class="tree-node-header">
-                              <span class="tree-icon">🚪</span>
-                              <span class="tree-label">Apt 203</span>
-                              <span class="tree-status tree-status--warning"></span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <!-- Étage 3 -->
-                      <div class="tree-node">
-                        <div class="tree-node-header">
-                          <span class="tree-expand">▶</span>
-                          <span class="tree-icon">🏠</span>
-                          <span class="tree-label">Étage 3</span>
-                          <span class="tree-count">8 lots</span>
-                        </div>
-                      </div>
-                      
-                      <!-- Étage 4 -->
-                      <div class="tree-node">
-                        <div class="tree-node-header">
-                          <span class="tree-expand">▶</span>
-                          <span class="tree-icon">🏠</span>
-                          <span class="tree-label">Étage 4</span>
-                          <span class="tree-count">8 lots</span>
-                        </div>
-                      </div>
-                      
-                      <!-- Toiture -->
-                      <div class="tree-node tree-node--leaf">
-                        <div class="tree-node-header">
-                          <span class="tree-icon">🏗️</span>
-                          <span class="tree-label">Toiture / VMC</span>
-                          <span class="tree-status tree-status--ok"></span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Right: Détails Zone Sélectionnée -->
-          <div class="building-details">
-            <!-- Alertes Actives -->
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">Alertes Actives</h3>
-                <span class="card-badge card-badge--critical">3</span>
-              </div>
-              <div class="card-body">
-                <div class="alert-list">
-                  <div class="alert-item">
-                    <span class="alert-dot alert-dot--critical"></span>
-                    <div class="alert-item-content">
-                      <div class="alert-item-title">Chaudière - Défaut brûleur</div>
-                      <div class="alert-item-meta">Chaufferie • Depuis 2h</div>
-                    </div>
-                    <button class="btn btn-sm btn-secondary">Voir</button>
-                  </div>
-                  <div class="alert-item">
-                    <span class="alert-dot alert-dot--warning"></span>
-                    <div class="alert-item-content">
-                      <div class="alert-item-title">Température hors consigne</div>
-                      <div class="alert-item-meta">Apt 201 • 19.2°C / 21°C</div>
-                    </div>
-                    <button class="btn btn-sm btn-secondary">Voir</button>
-                  </div>
-                  <div class="alert-item">
-                    <span class="alert-dot alert-dot--warning"></span>
-                    <div class="alert-item-content">
-                      <div class="alert-item-title">CO2 élevé</div>
-                      <div class="alert-item-meta">Apt 203 • 1200 ppm</div>
-                    </div>
-                    <button class="btn btn-sm btn-secondary">Voir</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Équipements Principaux -->
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">Équipements Principaux</h3>
-                <a href="#" class="card-action">Voir tout →</a>
-              </div>
-              <div class="card-body">
-                <div class="equipment-grid">
-                  <div class="equipment-card equipment-card--critical">
-                    <div class="equipment-icon">🔥</div>
-                    <div class="equipment-info">
-                      <div class="equipment-name">Chaudière Gaz</div>
-                      <div class="equipment-status">Défaut brûleur</div>
-                    </div>
-                    <span class="equipment-badge equipment-badge--critical">KO</span>
-                  </div>
-                  <div class="equipment-card equipment-card--ok">
-                    <div class="equipment-icon">❄️</div>
-                    <div class="equipment-info">
-                      <div class="equipment-name">PAC Réversible</div>
-                      <div class="equipment-status">Mode chauffage</div>
-                    </div>
-                    <span class="equipment-badge equipment-badge--ok">OK</span>
-                  </div>
-                  <div class="equipment-card equipment-card--ok">
-                    <div class="equipment-icon">🌀</div>
-                    <div class="equipment-info">
-                      <div class="equipment-name">VMC Double Flux</div>
-                      <div class="equipment-status">Vitesse 2/3</div>
-                    </div>
-                    <span class="equipment-badge equipment-badge--ok">OK</span>
-                  </div>
-                  <div class="equipment-card equipment-card--ok">
-                    <div class="equipment-icon">💡</div>
-                    <div class="equipment-info">
-                      <div class="equipment-name">Éclairage Communs</div>
-                      <div class="equipment-status">Auto - Crépusculaire</div>
-                    </div>
-                    <span class="equipment-badge equipment-badge--ok">OK</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Courbe de Charge -->
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">Courbe de Charge (24h)</h3>
-                <div class="chart-legend">
-                  <span class="legend-item"><span class="legend-dot" style="background: var(--color-primary)"></span> Réel</span>
-                  <span class="legend-item"><span class="legend-dot" style="background: var(--color-gray-300)"></span> Référence</span>
-                </div>
-              </div>
-              <div class="card-body">
-                <div class="chart-container" style="height: 200px;">
-                  <canvas id="loadCurveChart"></canvas>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Building Pulse -->
-        <div class="building-footer">
+
+        <!-- Main Grid -->
+        <div class="main-grid">
+          <!-- Structure Tree -->
           <div class="card">
-            <div class="card-body">
-              <div class="building-pulse-inline">
-                <div class="pulse-mini">
-                  <div class="pulse-mini-score">72</div>
+            <div class="card-header">
+              <span class="card-title">Structure du Bâtiment</span>
+              <a href="#" class="card-action">Voir plan →</a>
+            </div>
+            <div class="card-body card-body-flush">
+              <div class="structure-tree">
+                <!-- Zone 1 -->
+                <div class="structure-item open" onclick="this.classList.toggle('open')">
+                  <div class="structure-expand open">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+                  </div>
+                  <div class="structure-icon zone">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/></svg>
+                  </div>
+                  <div class="structure-info">
+                    <div class="structure-name">Parties Communes</div>
+                    <div class="structure-meta">
+                      <span>8 étages • 24 équipements</span>
+                    </div>
+                  </div>
+                  <div class="structure-status">
+                    <span class="structure-status-dot ok"></span>
+                  </div>
                 </div>
-                <div class="pulse-info">
-                  <div class="pulse-title">Score Santé Bâtiment</div>
-                  <div class="pulse-desc">3 alertes actives impactent le score. Résolvez le défaut chaudière pour améliorer de +15 points.</div>
+                <div class="structure-children" style="display: block;">
+                  <!-- Floor RDC -->
+                  <div class="structure-item" onclick="this.classList.toggle('open')">
+                    <div class="structure-expand">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+                    </div>
+                    <div class="structure-icon floor">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+                    </div>
+                    <div class="structure-info">
+                      <div class="structure-name">RDC - Hall d'entrée</div>
+                      <div class="structure-meta">
+                        <span>6 équipements</span>
+                      </div>
+                    </div>
+                    <div class="structure-status">
+                      <span class="structure-status-dot ok"></span>
+                    </div>
+                  </div>
+                  <!-- Floor SS1 -->
+                  <div class="structure-item" onclick="this.classList.toggle('open')">
+                    <div class="structure-expand">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+                    </div>
+                    <div class="structure-icon floor">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+                    </div>
+                    <div class="structure-info">
+                      <div class="structure-name">SS1 - Local Technique</div>
+                      <div class="structure-meta">
+                        <span>12 équipements</span>
+                      </div>
+                    </div>
+                    <div class="structure-status">
+                      <span class="structure-status-dot warning"></span>
+                    </div>
+                  </div>
                 </div>
-                <button class="btn btn-primary">Plan d'action</button>
+
+                <!-- Zone 2 -->
+                <div class="structure-item" onclick="this.classList.toggle('open')">
+                  <div class="structure-expand">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+                  </div>
+                  <div class="structure-icon zone">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/></svg>
+                  </div>
+                  <div class="structure-info">
+                    <div class="structure-name">Logements Étages 1-4</div>
+                    <div class="structure-meta">
+                      <span>32 lots • 48 équipements</span>
+                    </div>
+                  </div>
+                  <div class="structure-status">
+                    <span class="structure-status-dot ok"></span>
+                  </div>
+                </div>
+
+                <!-- Zone 3 -->
+                <div class="structure-item" onclick="this.classList.toggle('open')">
+                  <div class="structure-expand">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+                  </div>
+                  <div class="structure-icon zone">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/></svg>
+                  </div>
+                  <div class="structure-info">
+                    <div class="structure-name">Logements Étages 5-8</div>
+                    <div class="structure-meta">
+                      <span>32 lots • 55 équipements</span>
+                    </div>
+                  </div>
+                  <div class="structure-status">
+                    <span class="structure-status-dot critical"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Alerts Sidebar -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Alertes Actives</span>
+              <a href="#" class="card-action">Voir toutes →</a>
+            </div>
+            <div class="card-body card-body-flush">
+              <div class="alerts-list">
+                <div class="alert-item">
+                  <div class="alert-severity critical"></div>
+                  <div class="alert-content">
+                    <div class="alert-title">Panne CTA-01 - Local Technique</div>
+                    <div class="alert-meta">Ventilation • Défaut moteur</div>
+                  </div>
+                  <div class="alert-time">Il y a 15 min</div>
+                </div>
+                <div class="alert-item">
+                  <div class="alert-severity warning"></div>
+                  <div class="alert-content">
+                    <div class="alert-title">Surconsommation Étage 7</div>
+                    <div class="alert-meta">Énergie • +23% vs moyenne</div>
+                  </div>
+                  <div class="alert-time">Il y a 1h</div>
+                </div>
+                <div class="alert-item">
+                  <div class="alert-severity warning"></div>
+                  <div class="alert-content">
+                    <div class="alert-title">Température élevée Hall</div>
+                    <div class="alert-meta">Confort • 26.2°C (consigne: 22°C)</div>
+                  </div>
+                  <div class="alert-time">Il y a 2h</div>
+                </div>
+                <div class="alert-item">
+                  <div class="alert-severity info"></div>
+                  <div class="alert-content">
+                    <div class="alert-title">Maintenance préventive prévue</div>
+                    <div class="alert-meta">Chaudière • Dans 5 jours</div>
+                  </div>
+                  <div class="alert-time">Planifié</div>
+                </div>
+                <div class="alert-item">
+                  <div class="alert-severity info"></div>
+                  <div class="alert-content">
+                    <div class="alert-title">Filtre à remplacer - CTA-02</div>
+                    <div class="alert-meta">Maintenance prédictive IA</div>
+                  </div>
+                  <div class="alert-time">Recommandé</div>
+                </div>
               </div>
             </div>
           </div>
         </div>
+
+        <!-- Equipment Grid -->
+        <div class="card" style="margin-top: 24px;">
+          <div class="card-header">
+            <span class="card-title">Équipements Principaux</span>
+            <a href="#" class="card-action">Voir tous (127) →</a>
+          </div>
+          <div class="equipment-grid">
+            <div class="equipment-card">
+              <div class="equipment-header">
+                <div class="equipment-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+                </div>
+                <span class="equipment-status error">● En panne</span>
+              </div>
+              <div class="equipment-name">CTA-01</div>
+              <div class="equipment-type">Centrale de Traitement d'Air</div>
+              <div class="equipment-metrics">
+                <div class="equipment-metric">
+                  <span class="equipment-metric-value">0 m³/h</span>
+                  <span class="equipment-metric-label">Débit</span>
+                </div>
+                <div class="equipment-metric">
+                  <span class="equipment-metric-value">--°C</span>
+                  <span class="equipment-metric-label">Temp.</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="equipment-card">
+              <div class="equipment-header">
+                <div class="equipment-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+                </div>
+                <span class="equipment-status running">● En marche</span>
+              </div>
+              <div class="equipment-name">CTA-02</div>
+              <div class="equipment-type">Centrale de Traitement d'Air</div>
+              <div class="equipment-metrics">
+                <div class="equipment-metric">
+                  <span class="equipment-metric-value">3 200 m³/h</span>
+                  <span class="equipment-metric-label">Débit</span>
+                </div>
+                <div class="equipment-metric">
+                  <span class="equipment-metric-value">19.5°C</span>
+                  <span class="equipment-metric-label">Temp.</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="equipment-card">
+              <div class="equipment-header">
+                <div class="equipment-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z"/></svg>
+                </div>
+                <span class="equipment-status running">● En marche</span>
+              </div>
+              <div class="equipment-name">Chaudière GAZ-01</div>
+              <div class="equipment-type">Chaudière Gaz Condensation</div>
+              <div class="equipment-metrics">
+                <div class="equipment-metric">
+                  <span class="equipment-metric-value">78%</span>
+                  <span class="equipment-metric-label">Charge</span>
+                </div>
+                <div class="equipment-metric">
+                  <span class="equipment-metric-value">65°C</span>
+                  <span class="equipment-metric-label">Départ</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="equipment-card">
+              <div class="equipment-header">
+                <div class="equipment-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+                </div>
+                <span class="equipment-status running">● En marche</span>
+              </div>
+              <div class="equipment-name">ASC-01</div>
+              <div class="equipment-type">Ascenseur Principal</div>
+              <div class="equipment-metrics">
+                <div class="equipment-metric">
+                  <span class="equipment-metric-value">142</span>
+                  <span class="equipment-metric-label">Cycles/jour</span>
+                </div>
+                <div class="equipment-metric">
+                  <span class="equipment-metric-value">OK</span>
+                  <span class="equipment-metric-label">État</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="equipment-card">
+              <div class="equipment-header">
+                <div class="equipment-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                </div>
+                <span class="equipment-status running">● Actif</span>
+              </div>
+              <div class="equipment-name">TGBT Principal</div>
+              <div class="equipment-type">Tableau Général Basse Tension</div>
+              <div class="equipment-metrics">
+                <div class="equipment-metric">
+                  <span class="equipment-metric-value">45.2 kW</span>
+                  <span class="equipment-metric-label">Puissance</span>
+                </div>
+                <div class="equipment-metric">
+                  <span class="equipment-metric-value">0.92</span>
+                  <span class="equipment-metric-label">Cos φ</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="equipment-card">
+              <div class="equipment-header">
+                <div class="equipment-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <span class="equipment-status running">● Armé</span>
+              </div>
+              <div class="equipment-name">SSI Central</div>
+              <div class="equipment-type">Système Sécurité Incendie</div>
+              <div class="equipment-metrics">
+                <div class="equipment-metric">
+                  <span class="equipment-metric-value">24</span>
+                  <span class="equipment-metric-label">Détecteurs</span>
+                </div>
+                <div class="equipment-metric">
+                  <span class="equipment-metric-value">0</span>
+                  <span class="equipment-metric-label">Défauts</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </main>
   </div>
-  
-  <!-- Chart.js Initialization -->
+
   <script>
-    // Load Curve Chart
-    const loadCtx = document.getElementById('loadCurveChart').getContext('2d');
-    new Chart(loadCtx, {
-      type: 'line',
-      data: {
-        labels: ['00h', '02h', '04h', '06h', '08h', '10h', '12h', '14h', '16h', '18h', '20h', '22h'],
-        datasets: [
-          {
-            label: 'Consommation réelle',
-            data: [15, 12, 10, 11, 25, 35, 32, 28, 30, 38, 42, 28],
-            borderColor: '#059669',
-            backgroundColor: 'rgba(5, 150, 105, 0.1)',
-            fill: true,
-            tension: 0.4
-          },
-          {
-            label: 'Référence',
-            data: [14, 12, 11, 12, 22, 30, 28, 25, 27, 32, 35, 25],
-            borderColor: '#CBD5E1',
-            borderDash: [5, 5],
-            fill: false,
-            tension: 0.4
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
-        scales: {
-          y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } },
-          x: { grid: { display: false } }
-        }
-      }
+    // Toggle structure tree items
+    document.querySelectorAll('.structure-item').forEach(item => {
+      item.addEventListener('click', function(e) {
+        e.stopPropagation();
+        this.classList.toggle('open');
+        const expand = this.querySelector('.structure-expand');
+        if (expand) expand.classList.toggle('open');
+      });
     });
-    
-    // Tree view toggle
-    document.querySelectorAll('.tree-node-header').forEach(header => {
-      header.addEventListener('click', () => {
-        const node = header.parentElement;
-        if (!node.classList.contains('tree-node--leaf')) {
-          node.classList.toggle('expanded');
-          const expand = header.querySelector('.tree-expand');
-          if (expand) {
-            expand.textContent = node.classList.contains('expanded') ? '▼' : '▶';
-          }
-        }
+
+    // Tab switching
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', function() {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+
+    // Equipment card click
+    document.querySelectorAll('.equipment-card').forEach(card => {
+      card.addEventListener('click', function() {
+        alert('Ouvrir fiche équipement: ' + this.querySelector('.equipment-name').textContent);
       });
     });
   </script>
