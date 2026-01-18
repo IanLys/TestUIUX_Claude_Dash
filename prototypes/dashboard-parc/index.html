@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart'Building - Dashboard Parc Immobilier</title>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Design System Tokens -->
+  <link rel="stylesheet" href="../../design-system/tokens/colors.css">
+  <link rel="stylesheet" href="../../design-system/tokens/typography.css">
+  <link rel="stylesheet" href="../../design-system/tokens/spacing.css">
+  
+  <!-- Design System Components -->
+  <link rel="stylesheet" href="../../design-system/components/buttons.css">
+  <link rel="stylesheet" href="../../design-system/components/kpi-cards.css">
+  <link rel="stylesheet" href="../../design-system/components/alerts.css">
+  
+  <!-- Dashboard Layout -->
+  <link rel="stylesheet" href="layout.css">
+  <link rel="stylesheet" href="dashboard.css">
+  
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <style>
+    /* Reset */
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; font-family: var(--font-family-base); background: var(--color-background); color: var(--color-text); }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="#" class="logo">
+          <div class="logo-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2L2 7v10l10 5 10-5V7L12 2zm0 2.18l6.9 3.45L12 11.09 5.1 7.63 12 4.18zM4 8.82l7 3.5v7.36l-7-3.5V8.82zm9 10.86v-7.36l7-3.5v7.36l-7 3.5z"/></svg>
+          </div>
+          <div class="logo-text">Smart'<span>Building</span></div>
+        </a>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <div class="nav-section">
+          <div class="nav-section-title">Navigation</div>
+          <a href="#" class="nav-item active">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+              <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+            </svg>
+            Dashboard
+          </a>
+          <a href="#" class="nav-item">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+            Patrimoine
+          </a>
+          <a href="#" class="nav-item">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+            </svg>
+            Carte
+          </a>
+        </div>
+        
+        <div class="nav-section">
+          <div class="nav-section-title">Analyse</div>
+          <a href="#" class="nav-item">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+            </svg>
+            Analytique
+          </a>
+          <a href="#" class="nav-item">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/>
+            </svg>
+            Rapports
+          </a>
+        </div>
+        
+        <div class="nav-section">
+          <div class="nav-section-title">Système</div>
+          <a href="#" class="nav-item">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/>
+            </svg>
+            Alertes
+            <span class="nav-badge">12</span>
+          </a>
+          <a href="#" class="nav-item">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>
+            </svg>
+            Paramètres
+          </a>
+        </div>
+      </nav>
+      
+      <div class="sidebar-services">
+        <div class="services-title">Services Actifs</div>
+        <div class="service-card active">
+          <div class="service-name">Smart'GTB</div>
+          <div class="service-count">3 200 sites connectés</div>
+        </div>
+        <div class="service-card">
+          <div class="service-name">Smart'Ecopilot</div>
+          <div class="service-count">2 800 sites actifs</div>
+        </div>
+      </div>
+      
+      <div class="sidebar-user">
+        <div class="user-avatar">MD</div>
+        <div class="user-info">
+          <div class="user-name">Marc Dupont</div>
+          <div class="user-role">Facility Manager</div>
+        </div>
+      </div>
+    </aside>
+    
+    <!-- MAIN CONTENT -->
+    <main class="main">
+      <!-- Header -->
+      <header class="header">
+        <div class="header-title">
+          <h1>Parc Immobilier</h1>
+          <p>Vue consolidée de votre patrimoine - CDC Habitat</p>
+        </div>
+        
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+          </svg>
+          <input type="text" placeholder="Rechercher un site, équipement...">
+          <span class="search-shortcut">⌘K</span>
+        </div>
+        
+        <div class="header-actions">
+          <button class="header-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/>
+            </svg>
+            <span class="notification-dot"></span>
+          </button>
+          <button class="header-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+          </button>
+        </div>
+      </header>
+      
+      <!-- Content -->
+      <div class="content">
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+          <button class="nav-tab active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/>
+              <line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/>
+              <line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
+            </svg>
+            Hiérarchique
+          </button>
+          <button class="nav-tab">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+              <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+            </svg>
+            Sites
+          </button>
+          <button class="nav-tab">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+            </svg>
+            Carte
+          </button>
+        </div>
+        
+        <!-- KPI Grid -->
+        <div class="kpi-grid kpi-grid--4 mb-6">
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <div class="kpi-icon kpi-icon--buildings">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+              </div>
+              <span class="kpi-label">Bâtiments</span>
+            </div>
+            <div class="kpi-value">4 847</div>
+            <div class="kpi-trend">
+              <span class="kpi-trend-badge kpi-trend-badge--positive">↗ +2.1%</span>
+              <span class="kpi-trend-period">vs N-1</span>
+            </div>
+          </div>
+          
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <div class="kpi-icon kpi-icon--energy">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              </div>
+              <span class="kpi-label">Consommation / an</span>
+            </div>
+            <div class="kpi-value">127<span class="kpi-unit">GWh</span></div>
+            <div class="kpi-trend">
+              <span class="kpi-trend-badge kpi-trend-badge--positive">↘ -4.2%</span>
+              <span class="kpi-trend-period">vs N-1</span>
+            </div>
+          </div>
+          
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <div class="kpi-icon kpi-icon--cost">
+                <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
+              </div>
+              <span class="kpi-label">Coût énergétique / an</span>
+            </div>
+            <div class="kpi-value">12.4<span class="kpi-unit">M€</span></div>
+            <div class="kpi-trend">
+              <span class="kpi-trend-badge kpi-trend-badge--positive">↘ -8.1%</span>
+              <span class="kpi-trend-period">vs N-1</span>
+            </div>
+          </div>
+          
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <div class="kpi-icon kpi-icon--compliance">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              </div>
+              <span class="kpi-label">Conformité Décret Tertiaire</span>
+            </div>
+            <div class="kpi-value">89<span class="kpi-unit">%</span></div>
+            <div class="kpi-trend">
+              <span class="kpi-trend-badge kpi-trend-badge--positive">↗ +5%</span>
+              <span class="kpi-trend-period">objectif 2030</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Main Grid -->
+        <div class="main-grid">
+          <!-- Left Column -->
+          <div class="main-grid-left">
+            <!-- Chart Card -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Consommation Énergétique</h3>
+                <div class="chart-legend">
+                  <span class="legend-item"><span class="legend-dot" style="background: var(--color-primary)"></span> Électricité</span>
+                  <span class="legend-item"><span class="legend-dot" style="background: var(--color-accent)"></span> Gaz</span>
+                  <span class="legend-item"><span class="legend-dot" style="background: var(--color-info)"></span> Eau</span>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="chart-container">
+                  <canvas id="consumptionChart"></canvas>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Sites Table -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Top Sites Consommateurs</h3>
+                <a href="#" class="card-action">Voir tout →</a>
+              </div>
+              <div class="card-body p-0">
+                <table class="sites-table">
+                  <thead>
+                    <tr>
+                      <th>Site</th>
+                      <th>Région</th>
+                      <th>Conso. (MWh)</th>
+                      <th>Var.</th>
+                      <th>Statut</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <div class="site-name">Résidence Soleil</div>
+                        <div class="site-address">15 rue de la Paix, Paris 75002</div>
+                      </td>
+                      <td>Île-de-France</td>
+                      <td>2 450</td>
+                      <td class="trend-up">+12%</td>
+                      <td><span class="status-badge status-badge--warning">Alerte</span></td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="site-name">Tour Horizon</div>
+                        <div class="site-address">8 avenue des Champs, Lyon 69003</div>
+                      </td>
+                      <td>Auvergne-RA</td>
+                      <td>1 890</td>
+                      <td class="trend-down">-3%</td>
+                      <td><span class="status-badge status-badge--normal">Normal</span></td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="site-name">Les Jardins</div>
+                        <div class="site-address">22 bd Maritime, Marseille 13008</div>
+                      </td>
+                      <td>PACA</td>
+                      <td>1 650</td>
+                      <td class="trend-down">-7%</td>
+                      <td><span class="status-badge status-badge--normal">Normal</span></td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="site-name">Bâtiment Central</div>
+                        <div class="site-address">5 place Bellecour, Lyon 69002</div>
+                      </td>
+                      <td>Auvergne-RA</td>
+                      <td>1 420</td>
+                      <td class="trend-up">+5%</td>
+                      <td><span class="status-badge status-badge--normal">Normal</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Right Column -->
+          <div class="main-grid-right">
+            <!-- Alerts Card -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Alertes Actives</h3>
+                <a href="#" class="card-action">Voir tout →</a>
+              </div>
+              <div class="card-body">
+                <div class="alert-list">
+                  <div class="alert-item">
+                    <span class="alert-dot alert-dot--critical"></span>
+                    <div class="alert-item-content">
+                      <div class="alert-item-title">Surconsommation détectée</div>
+                      <div class="alert-item-meta">Résidence Soleil • Il y a 2h</div>
+                    </div>
+                    <span class="alert-badge alert-badge--critical">Critique</span>
+                  </div>
+                  <div class="alert-item">
+                    <span class="alert-dot alert-dot--warning"></span>
+                    <div class="alert-item-content">
+                      <div class="alert-item-title">Maintenance préventive requise</div>
+                      <div class="alert-item-meta">Tour Horizon - CTA 01 • Il y a 5h</div>
+                    </div>
+                    <span class="alert-badge alert-badge--warning">Moyen</span>
+                  </div>
+                  <div class="alert-item">
+                    <span class="alert-dot alert-dot--warning"></span>
+                    <div class="alert-item-content">
+                      <div class="alert-item-title">Talon de nuit anormal</div>
+                      <div class="alert-item-meta">Les Jardins • Il y a 8h</div>
+                    </div>
+                    <span class="alert-badge alert-badge--warning">Moyen</span>
+                  </div>
+                  <div class="alert-item">
+                    <span class="alert-dot alert-dot--info"></span>
+                    <div class="alert-item-content">
+                      <div class="alert-item-title">Rapport mensuel disponible</div>
+                      <div class="alert-item-meta">Système • Il y a 1j</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Building Pulse -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Santé Globale du Parc</h3>
+              </div>
+              <div class="card-body">
+                <div class="pulse-container">
+                  <div class="pulse-widget">
+                    <div class="pulse-score">87</div>
+                    <div class="pulse-label">Score Santé</div>
+                  </div>
+                  <div class="pulse-status">État : Bon</div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Predictive Card -->
+            <div class="predictive-card">
+              <span class="predictive-badge">IA</span>
+              <div class="predictive-title">Pic de consommation prévu</div>
+              <div class="predictive-desc">Dans 3 jours, augmentation estimée de +15% sur le secteur Île-de-France due à la vague de froid.</div>
+              <div class="predictive-actions">
+                <button class="btn btn-primary btn-sm">Voir détails</button>
+                <button class="btn btn-secondary btn-sm">Ignorer</button>
+              </div>
+            </div>
+            
+            <!-- Region Distribution -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Répartition par Région</h3>
+              </div>
+              <div class="card-body">
+                <div class="region-list">
+                  <div class="region-item">
+                    <span class="region-name">Île-de-France</span>
+                    <div class="region-bar-container">
+                      <div class="region-bar" style="width: 45%"></div>
+                    </div>
+                    <span class="region-value">45%</span>
+                  </div>
+                  <div class="region-item">
+                    <span class="region-name">Auvergne-RA</span>
+                    <div class="region-bar-container">
+                      <div class="region-bar" style="width: 22%"></div>
+                    </div>
+                    <span class="region-value">22%</span>
+                  </div>
+                  <div class="region-item">
+                    <span class="region-name">PACA</span>
+                    <div class="region-bar-container">
+                      <div class="region-bar" style="width: 18%"></div>
+                    </div>
+                    <span class="region-value">18%</span>
+                  </div>
+                  <div class="region-item">
+                    <span class="region-name">Occitanie</span>
+                    <div class="region-bar-container">
+                      <div class="region-bar" style="width: 10%"></div>
+                    </div>
+                    <span class="region-value">10%</span>
+                  </div>
+                  <div class="region-item">
+                    <span class="region-name">Autres</span>
+                    <div class="region-bar-container">
+                      <div class="region-bar" style="width: 5%"></div>
+                    </div>
+                    <span class="region-value">5%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  
+  <!-- Chart.js Initialization -->
+  <script>
+    const ctx = document.getElementById('consumptionChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'],
+        datasets: [
+          {
+            label: 'Électricité',
+            data: [12.5, 11.8, 10.2, 9.5, 8.8, 9.2, 10.5, 10.8, 9.8, 10.5, 11.2, 12.8],
+            borderColor: '#059669',
+            backgroundColor: 'rgba(5, 150, 105, 0.1)',
+            fill: true,
+            tension: 0.4
+          },
+          {
+            label: 'Gaz',
+            data: [8.2, 7.5, 5.8, 3.2, 1.5, 0.8, 0.5, 0.6, 1.2, 3.5, 6.2, 7.8],
+            borderColor: '#F59E0B',
+            backgroundColor: 'rgba(245, 158, 11, 0.1)',
+            fill: true,
+            tension: 0.4
+          },
+          {
+            label: 'Eau',
+            data: [2.1, 2.0, 2.2, 2.4, 2.8, 3.2, 3.5, 3.4, 2.9, 2.5, 2.2, 2.1],
+            borderColor: '#3B82F6',
+            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+            fill: true,
+            tension: 0.4
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: { color: 'rgba(0,0,0,0.05)' }
+          },
+          x: {
+            grid: { display: false }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
